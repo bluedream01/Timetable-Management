@@ -1,68 +1,154 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
+@layer base {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    /* Core Colors - Professional Education Theme */
+    --background: 0 0% 100%;
+    --foreground: 214 20% 20%;
+    
+    /* Primary - Professional Blue */
+    --primary: 207 73% 45%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 207 73% 38%;
+    --primary-light: 207 73% 95%;
+    
+    /* Secondary - Academic Green */
+    --secondary: 158 42% 45%;
+    --secondary-foreground: 0 0% 100%;
+    --secondary-hover: 158 42% 38%;
+    --secondary-light: 158 42% 95%;
+    
+    /* Accent - Warm Orange for Highlights */
+    --accent: 28 85% 55%;
+    --accent-foreground: 0 0% 100%;
+    --accent-light: 28 85% 95%;
+    
+    /* Card & Popover */
+    --card: 0 0% 100%;
+    --card-foreground: 214 20% 20%;
+    --card-hover: 210 20% 98%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 214 20% 20%;
+    
+    /* Muted & Borders */
+    --muted: 210 20% 96%;
+    --muted-foreground: 214 15% 45%;
+    
+    --border: 214 20% 91%;
+    --input: 214 20% 91%;
+    --ring: 207 73% 45%;
+    
+    /* Status Colors */
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    /* Calendar Specific */
+    --calendar-today: 207 73% 45%;
+    --calendar-selected: 158 42% 45%;
+    --calendar-hover: 207 73% 95%;
+    --calendar-current-class: 28 85% 55%;
+    
+    /* Sidebar */
+    --sidebar-background: 207 73% 98%;
+    --sidebar-foreground: 214 20% 20%;
+    --sidebar-primary: 207 73% 45%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 207 73% 95%;
+    --sidebar-accent-foreground: 207 73% 30%;
+    --sidebar-border: 207 30% 90%;
+    --sidebar-ring: 207 73% 45%;
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(207 73% 45%), hsl(158 42% 45%));
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%), hsl(210 20% 98%));
+    --gradient-header: linear-gradient(90deg, hsl(207 73% 45%), hsl(207 73% 55%));
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px hsl(214 20% 20% / 0.05);
+    --shadow-md: 0 4px 6px hsl(214 20% 20% / 0.07);
+    --shadow-lg: 0 10px 15px hsl(214 20% 20% / 0.1);
+    --shadow-card: 0 2px 8px hsl(214 20% 20% / 0.08);
+    
+    /* Animations */
+    --transition-fast: all 0.15s ease;
+    --transition-base: all 0.2s ease;
+    --transition-slow: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    --radius: 0.5rem;
   }
-  a:hover {
-    color: #747bff;
+
+  .dark {
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+    
+    --primary: 207 73% 55%;
+    --primary-foreground: 222 47% 11%;
+    --primary-hover: 207 73% 62%;
+    --primary-light: 207 73% 20%;
+    
+    --secondary: 158 42% 55%;
+    --secondary-foreground: 222 47% 11%;
+    --secondary-hover: 158 42% 62%;
+    --secondary-light: 158 42% 20%;
+    
+    --accent: 28 85% 60%;
+    --accent-foreground: 222 47% 11%;
+    --accent-light: 28 85% 20%;
+    
+    --card: 222 47% 13%;
+    --card-foreground: 210 40% 98%;
+    --card-hover: 222 47% 15%;
+    
+    --popover: 222 47% 13%;
+    --popover-foreground: 210 40% 98%;
+    
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+    
+    --border: 217 33% 20%;
+    --input: 217 33% 20%;
+    --ring: 207 73% 55%;
+    
+    --success: 142 71% 55%;
+    --success-foreground: 222 47% 11%;
+    --warning: 38 92% 60%;
+    --warning-foreground: 222 47% 11%;
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 210 40% 98%;
+    
+    --calendar-today: 207 73% 55%;
+    --calendar-selected: 158 42% 55%;
+    --calendar-hover: 207 73% 20%;
+    --calendar-current-class: 28 85% 60%;
+    
+    --sidebar-background: 222 47% 13%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 207 73% 55%;
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: 222 47% 17%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217 33% 20%;
+    --sidebar-ring: 207 73% 55%;
   }
-  button {
-    background-color: #f9f9f9;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
   }
 }
