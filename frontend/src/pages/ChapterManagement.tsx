@@ -6,49 +6,96 @@ import { Input } from '@/components/ui/input';
 import { Folder, File, Plus, Upload, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
+interface Chapter {
+  id: number;
+  name: string;
+  files: string[];
+}
+
 export const ChapterManagement: React.FC = () => {
   const { t } = useLanguage();
   const { toast } = useToast();
-  const [chapters, setChapters] = useState([
+
+  const [chapters, setChapters] = useState<Chapter[]>([
     { id: 1, name: 'Chapter 1: Introduction', files: ['notes.pdf', 'assignment1.docx'] },
     { id: 2, name: 'Chapter 2: Basics', files: ['lecture.ppt'] },
   ]);
 
+  const [newChapterName, setNewChapterName] = useState('');
+
+  // Create new chapter with user input
   const handleCreateChapter = () => {
-    const newChapter = {
+    if (!newChapterName.trim()) {
+      toast({ title: 'Error', description: 'Please enter a chapter name.', variant: 'destructive' });
+      return;
+    }
+
+    const newChapter: Chapter = {
       id: chapters.length + 1,
-      name: `Chapter ${chapters.length + 1}`,
+      name: newChapterName,
       files: [],
     };
     setChapters([...chapters, newChapter]);
-    toast({
-      title: "Chapter Created",
-      description: "New chapter folder has been created.",
-    });
+    setNewChapterName('');
+    toast({ title: 'Chapter Created', description: `Chapter "${newChapterName}" has been created.` });
   };
 
+  // Upload files to a chapter
   const handleUploadFile = (chapterId: number) => {
-    toast({
-      title: "Upload Started",
-      description: "Select files to upload to this chapter.",
-    });
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.multiple = true;
+
+    input.onchange = (e: Event) => {
+      const target = e.target as HTMLInputElement;
+      if (!target.files) return;
+      const filesArray = Array.from(target.files).map(f => f.name);
+
+      setChapters(prev =>
+        prev.map(ch =>
+          ch.id === chapterId ? { ...ch, files: [...ch.files, ...filesArray] } : ch
+        )
+      );
+
+      toast({ title: 'Files Uploaded', description: `${filesArray.length} file(s) added.` });
+    };
+
+    input.click();
   };
 
+  // Delete a file
   const handleDeleteFile = (chapterId: number, fileName: string) => {
-    toast({
-      title: "File Deleted",
-      description: `${fileName} has been removed.`,
-    });
+    setChapters(prev =>
+      prev.map(ch =>
+        ch.id === chapterId ? { ...ch, files: ch.files.filter(f => f !== fileName) } : ch
+      )
+    );
+
+    toast({ title: 'File Deleted', description: `${fileName} has been removed.` });
+  };
+
+  // Update chapter name
+  const handleChapterNameChange = (chapterId: number, name: string) => {
+    setChapters(prev =>
+      prev.map(ch => (ch.id === chapterId ? { ...ch, name } : ch))
+    );
   };
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col md:flex-row justify-between items-center gap-2">
         <h1 className="text-3xl font-bold text-foreground">{t('chapterManagement')}</h1>
-        <Button onClick={handleCreateChapter} className="bg-gradient-primary hover:opacity-90">
-          <Plus className="mr-2 h-4 w-4" />
-          Create Chapter
-        </Button>
+        <div className="flex gap-2 w-full md:w-auto">
+          <Input
+            placeholder="Enter chapter name"
+            value={newChapterName}
+            onChange={e => setNewChapterName(e.target.value)}
+          />
+          <Button onClick={handleCreateChapter} className="bg-gradient-primary hover:opacity-90">
+            <Plus className="mr-2 h-4 w-4" />
+            Create Chapter
+          </Button>
+        </div>
       </div>
 
       <div className="grid gap-4">
@@ -57,19 +104,20 @@ export const ChapterManagement: React.FC = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Folder className="h-5 w-5 text-primary" />
-                {chapter.name}
+                <Input
+                  className="bg-transparent border-none px-0 py-0 text-lg font-semibold w-full"
+                  value={chapter.name}
+                  onChange={e => handleChapterNameChange(chapter.id, e.target.value)}
+                />
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                <div className="flex gap-2">
-                  <Input placeholder="Enter chapter name" defaultValue={chapter.name} />
-                  <Button size="sm" onClick={() => handleUploadFile(chapter.id)}>
-                    <Upload className="mr-2 h-4 w-4" />
-                    Upload
-                  </Button>
-                </div>
-                
+                <Button size="sm" onClick={() => handleUploadFile(chapter.id)}>
+                  <Upload className="mr-2 h-4 w-4" />
+                  Upload Files
+                </Button>
+
                 <div className="space-y-2">
                   {chapter.files.map((file) => (
                     <div key={file} className="flex items-center justify-between p-2 rounded-lg bg-card-hover">
