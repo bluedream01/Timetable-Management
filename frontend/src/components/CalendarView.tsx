@@ -17,7 +17,7 @@ const timeSlots = [
   '10:00 - 11:00',
   '11:00 - 12:00',
   '12:00 - 01:00', // lunch
-  '02:00 - 03:00',
+  '01:00 - 03:00',
   '03:00 - 04:00',
   '04:00 - 05:00',
 ];
@@ -32,7 +32,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
 }) => {
   const now = new Date();
   const currentDayIndex = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
-  const dayMap: DayOfWeek[] = [ 'monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+  const dayMap: DayOfWeek[] = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
 
   const currentDay = dayMap[currentDayIndex];
   const currentHour = now.getHours();
@@ -51,6 +51,19 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
 
   return (
     <div className="w-full overflow-x-auto shadow rounded-lg bg-card">
+      {/* 🔥 blink style injected directly */}
+      <style>
+        {`
+          @keyframes blink {
+            0%, 50%, 100% { opacity: 1; }
+            25%, 75% { opacity: 0.4; }
+          }
+          .highlight-current {
+            animation: blink 1.5s infinite;
+          }
+        `}
+      </style>
+
       <table className="w-full border-collapse">
         <thead>
           <tr className="bg-gradient-header">
@@ -86,7 +99,8 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                       'border p-2 text-sm align-top transition',
                       isLunch && 'bg-muted/50',
                       editable && !isLunch && 'hover:bg-calendar-hover cursor-pointer',
-                      highlight && 'bg-yellow-50 ring-2 ring-yellow-400'
+                      highlight &&
+                        'bg-yellow-50 ring-2 ring-yellow-400 highlight-current' // 👈 blinking
                     )}
                     onClick={() => editable && !isLunch && onEdit?.(day, timeIndex)}
                   >
