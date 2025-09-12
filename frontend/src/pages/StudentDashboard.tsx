@@ -20,7 +20,6 @@ const mockSchedule: { [key in DayOfWeek]: TimeSlot[] } = {
   wednesday: [],
   thursday: [],
   friday: [],
-  saturday: [],
 };
 
 export const StudentDashboard: React.FC = () => {
@@ -85,7 +84,7 @@ export const StudentDashboard: React.FC = () => {
           <CardTitle>Weekly Timetable</CardTitle>
         </CardHeader>
         <CardContent>
-          <CalendarView schedule={mockSchedule} currentClassHighlight={true} />
+          <CalendarView schedule={mockSchedule} highlightCurrentClass={true} />
         </CardContent>
       </Card>
     </div>

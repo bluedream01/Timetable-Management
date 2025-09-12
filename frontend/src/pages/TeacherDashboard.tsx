@@ -1,22 +1,136 @@
-import React from 'react';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { CalendarView } from '@/components/CalendarView';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Send, Phone, FolderOpen } from 'lucide-react';
+import React, { useEffect, useRef } from 'react';
+import { Clock, MapPin, User, Book, Send, Phone, FolderOpen } from 'lucide-react';
 import { DayOfWeek, TimeSlot } from '@/types';
+import { cn } from '@/lib/utils';
+import { useLanguage } from '@/contexts/LanguageContext';
 
+interface CalendarViewProps {
+  schedule: {
+    [key in DayOfWeek]: (TimeSlot | null)[];
+  };
+  editable?: boolean;
+}
+
+const timeSlots = [
+  '09:00 - 10:00',
+  '10:00 - 11:00',
+  '11:00 - 12:00',
+  '12:00 - 01:00', // lunch
+  '02:00 - 03:00',
+  '03:00 - 04:00',
+  '04:00 - 05:00',
+];
+
+const days: DayOfWeek[] = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+
+// Full mock schedule
 const mockSchedule: { [key in DayOfWeek]: TimeSlot[] } = {
   monday: [
     { id: '1', startTime: '09:00', endTime: '10:00', subject: 'Data Structures', faculty: 'Dr. Sharma', room: 'CS-101', batch: 'Batch A' },
-    { id: '2', startTime: '10:00', endTime: '11:00', subject: 'Algorithms', faculty: 'Dr. Sharma', room: 'CS-102', batch: 'Batch B' },
+    { id: '2', startTime: '10:00', endTime: '11:00', subject: 'Data Structures', faculty: 'Dr. Sharma', room: 'CS-102', batch: 'Batch B' },
+    { id: '3', startTime: '11:00', endTime: '12:00', subject: 'Data Structures', faculty: 'Dr. Sharma', room: 'CS-103', batch: 'Batch C' },
   ],
-  tuesday: [],
-  wednesday: [],
-  thursday: [],
-  friday: []
+  tuesday: [
+    { id: '12', startTime: '02:00', endTime: '03:00', subject: 'Data Structures', faculty: 'Dr. Sharma', room: 'CS-110', batch: 'Batch D' },
+    { id: '13', startTime: '03:00', endTime: '04:00', subject: 'Data Structures', faculty: 'Dr. Sharma', room: 'CS-111', batch: 'Batch E' },
+    { id: '14', startTime: '04:00', endTime: '05:00', subject: 'Data Structures', faculty: 'Dr. Sharma', room: 'CS-112', batch: 'Batch F' },
+  ],
+  wednesday: [
+    { id: '15', startTime: '09:00', endTime: '10:00', subject: 'Data Structures', faculty: 'Dr. Sharma', room: 'CS-113', batch: 'Batch A' },
+    { id: '19', startTime: '02:00', endTime: '03:00', subject: 'Data Structures', faculty: 'Dr. Sharma', room: 'CS-116', batch: 'Batch D' },
+    { id: '20', startTime: '03:00', endTime: '04:00', subject: 'Data Structures', faculty: 'Dr. Sharma', room: 'CS-117', batch: 'Batch E' },
+  ],
+  thursday: [
+    { id: '28', startTime: '04:00', endTime: '05:00', subject: 'Data Structures', faculty: 'Dr. Sharma', room: 'CS-124', batch: 'Batch F' },
+  ],
+  friday: [
+    { id: '29', startTime: '09:00', endTime: '10:00', subject: 'Data Structures', faculty: 'Dr. Sharma', room: 'CS-125', batch: 'Batch A' },
+    { id: '30', startTime: '10:00', endTime: '11:00', subject: 'Data Structures', faculty: 'Dr. Sharma', room: 'CS-126', batch: 'Batch B' },
+  ],
 };
 
+// Calendar View Component
+const CalendarView: React.FC<CalendarViewProps> = ({ schedule, editable = false }) => {
+  const currentSlotRef = useRef<HTMLTableCellElement | null>(null);
+
+  useEffect(() => {
+    currentSlotRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, []);
+
+  return (
+    <div className="w-full overflow-x-auto shadow rounded-lg bg-card">
+      <table className="w-full border-collapse">
+        <thead>
+          <tr className="bg-gradient-header">
+            <th className="border p-3 text-left">
+              <Clock className="inline-block w-4 h-4 mr-2" />Time
+            </th>
+            {days.map(day => (
+              <th key={day} className="border p-3 text-center min-w-[150px] capitalize">
+                {day}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {timeSlots.map((time, timeIndex) => (
+            <tr key={time} className={timeIndex === 3 ? 'bg-muted/30' : ''}>
+              <td className="border p-3 font-medium text-muted-foreground bg-primary-light/30">
+                {time}
+              </td>
+              {days.map(day => {
+                const slot = schedule[day]?.[timeIndex] ?? null;
+                const isLunch = timeIndex === 3;
+
+                // Hardcoded highlight: Monday, first class
+                const highlight = !isLunch && slot && day === 'monday' && timeIndex === 0;
+
+                return (
+                  <td
+                    key={`${day}-${timeIndex}`}
+                    ref={highlight ? currentSlotRef : null}
+                    className={cn(
+                      'border p-2 text-sm align-top transition',
+                      isLunch && 'bg-muted/50',
+                      editable && !isLunch && 'hover:bg-calendar-hover cursor-pointer',
+                      highlight && 'bg-yellow-50 ring-2 ring-yellow-400'
+                    )}
+                    onClick={() => editable && !isLunch && console.log(`Edit ${day} slot ${timeIndex}`)}
+                  >
+                    {isLunch ? (
+                      <div className="text-center text-muted-foreground">Lunch Break</div>
+                    ) : slot ? (
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-1 font-semibold">
+                          <Book className="w-3 h-3 text-primary" />{slot.subject}
+                        </div>
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <User className="w-3 h-3" />{slot.faculty}
+                        </div>
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <MapPin className="w-3 h-3" />{slot.room}
+                        </div>
+                        {slot.batch && (
+                          <div className="text-xs bg-secondary-light text-secondary px-1 py-0.5 rounded">
+                            {slot.batch}
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="text-center text-muted-foreground">{editable ? '+ Add Class' : '-'}</div>
+                    )}
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+// Teacher Dashboard
 export const TeacherDashboard: React.FC = () => {
   const { t } = useLanguage();
 
@@ -28,48 +142,33 @@ export const TeacherDashboard: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card className="border-border">
-          <CardHeader>
-            <CardTitle>Timetable Actions</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <Button className="w-full bg-gradient-primary hover:opacity-90">
-              <Send className="mr-2 h-4 w-4" />
-              Send to Admin for Review
-            </Button>
-            <Button variant="outline" className="w-full">
-              <Phone className="mr-2 h-4 w-4" />
-              Call Admin (Follow-up)
-            </Button>
-          </CardContent>
-        </Card>
+        <div className="border rounded-lg shadow p-3 space-y-3">
+          <h2 className="font-semibold">Timetable Actions</h2>
+          <button className="w-full bg-gradient-primary hover:opacity-90 flex items-center justify-center gap-2 py-1 rounded">
+            <Send className="w-4 h-4" /> Send to Admin for Review
+          </button>
+          <button className="w-full border flex items-center justify-center gap-2 py-1 rounded">
+            <Phone className="w-4 h-4" /> Call Admin (Follow-up)
+          </button>
+        </div>
 
-        <Card className="border-border">
-          <CardHeader>
-            <CardTitle>{t('chapterManagement')}</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <Button variant="outline" className="w-full">
-              <FolderOpen className="mr-2 h-4 w-4" />
-              Create New Chapter
-            </Button>
-            <div className="text-sm text-muted-foreground">
-              <p>• Chapter 1: Introduction</p>
-              <p>• Chapter 2: Basic Concepts</p>
-              <p>• Chapter 3: Advanced Topics</p>
-            </div>
-          </CardContent>
-        </Card>
+        <div className="border rounded-lg shadow p-3 space-y-3">
+          <h2 className="font-semibold">{t('chapterManagement')}</h2>
+          <button className="w-full border flex items-center justify-center gap-2 py-1 rounded">
+            <FolderOpen className="w-4 h-4" /> Create New Chapter
+          </button>
+          <div className="text-sm text-muted-foreground">
+            <p>• Chapter 1: Introduction</p>
+            <p>• Chapter 2: Basic Concepts</p>
+            <p>• Chapter 3: Advanced Topics</p>
+          </div>
+        </div>
       </div>
 
-      <Card className="border-border">
-        <CardHeader>
-          <CardTitle>My Schedule</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <CalendarView schedule={mockSchedule} editable={true} />
-        </CardContent>
-      </Card>
+      <div className="border rounded-lg shadow p-3">
+        <h2 className="font-semibold mb-2">My Schedule</h2>
+        <CalendarView schedule={mockSchedule} editable />
+      </div>
     </div>
   );
 };

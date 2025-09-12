@@ -62,11 +62,6 @@ export const Sidebar: React.FC = () => {
       return [
         ...baseItems,
         {
-          icon: Calendar,
-          label: t('viewTimetables'),
-          path: '/view-timetables',
-        },
-        {
           icon: BookOpen,
           label: t('chapterManagement'),
           path: '/chapter-management',

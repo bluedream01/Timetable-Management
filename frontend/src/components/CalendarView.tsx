@@ -9,13 +9,14 @@ interface CalendarViewProps {
   };
   editable?: boolean;
   onEdit?: (day: DayOfWeek, slotIndex: number) => void;
+  highlightCurrentClass?: boolean;
 }
 
 const timeSlots = [
   '09:00 - 10:00',
   '10:00 - 11:00',
   '11:00 - 12:00',
-  '12:00 - 01:00',
+  '12:00 - 01:00', // lunch
   '02:00 - 03:00',
   '03:00 - 04:00',
   '04:00 - 05:00',
@@ -23,7 +24,31 @@ const timeSlots = [
 
 const days: DayOfWeek[] = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
 
-export const CalendarView: React.FC<CalendarViewProps> = ({ schedule, editable = false, onEdit }) => {
+export const CalendarView: React.FC<CalendarViewProps> = ({
+  schedule,
+  editable = false,
+  onEdit,
+  highlightCurrentClass = false,
+}) => {
+  const now = new Date();
+  const currentDayIndex = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
+  const dayMap: DayOfWeek[] = [ 'monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+
+  const currentDay = dayMap[currentDayIndex];
+  const currentHour = now.getHours();
+  const currentMinute = now.getMinutes();
+
+  const isCurrentSlot = (day: DayOfWeek, timeRange: string) => {
+    if (!highlightCurrentClass) return false;
+    if (day !== currentDay) return false; // only highlight current day
+
+    const [start, end] = timeRange.split(' - ').map((t) => t.split(':').map(Number));
+    const startMinutes = start[0] * 60 + start[1];
+    const endMinutes = end[0] * 60 + end[1];
+    const nowMinutes = currentHour * 60 + currentMinute;
+    return nowMinutes >= startMinutes && nowMinutes < endMinutes;
+  };
+
   return (
     <div className="w-full overflow-x-auto shadow rounded-lg bg-card">
       <table className="w-full border-collapse">
@@ -34,7 +59,10 @@ export const CalendarView: React.FC<CalendarViewProps> = ({ schedule, editable =
               Time
             </th>
             {days.map((day) => (
-              <th key={day} className="border p-3 text-center min-w-[150px] capitalize">
+              <th
+                key={day}
+                className="border p-3 text-center min-w-[150px] capitalize"
+              >
                 {day}
               </th>
             ))}
@@ -43,28 +71,29 @@ export const CalendarView: React.FC<CalendarViewProps> = ({ schedule, editable =
         <tbody>
           {timeSlots.map((time, timeIndex) => (
             <tr key={time} className={timeIndex === 3 ? 'bg-muted/30' : ''}>
-              {/* Left column (time label) */}
               <td className="border p-3 font-medium text-muted-foreground bg-primary-light/30">
                 {time}
               </td>
-
-              {/* Day columns */}
               {days.map((day) => {
                 const slot = schedule[day]?.[timeIndex] ?? null;
                 const isLunch = timeIndex === 3;
+                const highlight = !isLunch && slot && isCurrentSlot(day, time);
 
                 return (
                   <td
                     key={`${day}-${timeIndex}`}
                     className={cn(
-                      'border p-2 text-sm align-top',
+                      'border p-2 text-sm align-top transition',
                       isLunch && 'bg-muted/50',
-                      editable && !isLunch && 'hover:bg-calendar-hover cursor-pointer'
+                      editable && !isLunch && 'hover:bg-calendar-hover cursor-pointer',
+                      highlight && 'bg-yellow-50 ring-2 ring-yellow-400'
                     )}
                     onClick={() => editable && !isLunch && onEdit?.(day, timeIndex)}
                   >
                     {isLunch ? (
-                      <div className="text-center text-muted-foreground">Lunch Break</div>
+                      <div className="text-center text-muted-foreground">
+                        Lunch Break
+                      </div>
                     ) : slot ? (
                       <div className="space-y-1">
                         <div className="flex items-center gap-1 font-semibold">
