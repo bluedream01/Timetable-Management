@@ -1,39 +1,105 @@
-import React, { useState } from 'react';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Plus, Trash2, Upload } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import React, { useState } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Plus, Trash2, Upload, Check } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 export const InputData: React.FC = () => {
+  const availableSubjects = ["DSA", "Analog", "Maths-III", "Signal & systems"];
+  const availableFaculty = [
+    // DSA
+    { name: "Dr. Sharma", teaches: "DSA" },
+    { name: "Prof. Nair", teaches: "DSA" },
+    { name: "Ms. Kapoor", teaches: "DSA" },
+
+    // Analog
+    { name: "Prof. Verma", teaches: "Analog" },
+    { name: "Dr. Raghavan", teaches: "Analog" },
+    { name: "Mr. Sinha", teaches: "Analog" },
+
+    // Maths-III
+    { name: "Ms. Gupta", teaches: "Maths-III" },
+    { name: "Dr. Rao", teaches: "Maths-III" },
+    { name: "Prof. Kulkarni", teaches: "Maths-III" },
+
+    // Signal & Systems
+    { name: "Mr. Khan", teaches: "Signal & Systems" },
+    { name: "Dr. Banerjee", teaches: "Signal & Systems" },
+    { name: "Ms. Thomas", teaches: "Signal & Systems" },
+  ];
+
+  const allClassrooms = ["Room 101", "Room 102", "Room 103", "Room 104"];
+  const unavailableClassrooms = ["Room 103"]; // example, can be fetched from backend
+
+  const navigate = useNavigate();
   const { t } = useLanguage();
   const { toast } = useToast();
-  const [subjects, setSubjects] = useState<string[]>(['']);
-  const [faculty, setFaculty] = useState<string[]>(['']);
 
-  const handleAddSubject = () => {
-    setSubjects([...subjects, '']);
-  };
+  const [subjects, setSubjects] = useState<string[]>([""]);
+  const [faculty, setFaculty] = useState<string[]>([""]);
+  const [selectedClassrooms, setSelectedClassrooms] = useState<string[]>([]);
 
-  const handleRemoveSubject = (index: number) => {
+  const handleAddSubject = () => setSubjects([...subjects, ""]);
+  const handleRemoveSubject = (index: number) =>
     setSubjects(subjects.filter((_, i) => i !== index));
-  };
 
-  const handleAddFaculty = () => {
-    setFaculty([...faculty, '']);
-  };
-
-  const handleRemoveFaculty = (index: number) => {
+  const handleAddFaculty = () => setFaculty([...faculty, ""]);
+  const handleRemoveFaculty = (index: number) =>
     setFaculty(faculty.filter((_, i) => i !== index));
+
+  const handleClassroomClick = (room: string, disabled: boolean) => {
+    if (disabled) return;
+    if (selectedClassrooms.includes(room)) {
+      setSelectedClassrooms(selectedClassrooms.filter((r) => r !== room));
+    } else {
+      setSelectedClassrooms([...selectedClassrooms, room]);
+    }
   };
 
-  const handleSave = () => {
-    toast({
-      title: "Data Saved",
-      description: "Timetable input data has been saved successfully.",
-    });
+  const handleSave = async () => {
+    const payload = {
+      classrooms: selectedClassrooms.length,
+      batches: Number((document.getElementById("batches") as HTMLInputElement)?.value || 0),
+      maxClassesPerDay: Number((document.getElementById("maxClasses") as HTMLInputElement)?.value || 0),
+      maxClassesPerWeek: Number((document.getElementById("maxPerWeek") as HTMLInputElement)?.value || 0),
+      fixedSlots: [(document.getElementById("fixedSlots") as HTMLInputElement)?.value || ""],
+      subjects,
+      faculty,
+    };
+
+    try {
+      const res = await fetch("http://localhost:5000/api/input-data/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        toast({
+          title: "✅ Data Saved",
+          description: "Timetable input data has been saved successfully.",
+        });
+        setSubjects([""]);
+        setFaculty([""]);
+        setSelectedClassrooms([]);
+        navigate("/generate-timetable");
+      } else {
+        const err = await res.json();
+        toast({
+          title: "❌ Error",
+          description: err.error || "Failed to save data",
+          variant: "destructive",
+        });
+      }
+    } catch (err) {
+      toast({
+        title: "🚨 Network Error",
+        description: "Backend not reachable. Please start Express server.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleUpload = () => {
@@ -46,7 +112,7 @@ export const InputData: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-foreground">{t('inputData')}</h1>
+        <h1 className="text-3xl font-bold text-foreground">{t("inputData")}</h1>
         <Button onClick={handleUpload} variant="outline">
           <Upload className="mr-2 h-4 w-4" />
           Upload Excel/CSV
@@ -54,26 +120,52 @@ export const InputData: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Classroom Selector */}
         <Card>
           <CardHeader>
-            <CardTitle>Basic Information</CardTitle>
+            <CardTitle>Select Classrooms</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <Label htmlFor="classrooms">Number of Classrooms</Label>
-              <Input id="classrooms" type="number" placeholder="Enter number" />
-            </div>
-            <div>
-              <Label htmlFor="batches">Number of Batches</Label>
-              <Input id="batches" type="number" placeholder="Enter number" />
-            </div>
-            <div>
-              <Label htmlFor="maxClasses">Max Classes per Day</Label>
-              <Input id="maxClasses" type="number" placeholder="Enter number" />
+          <CardContent>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              {allClassrooms.map((room) => {
+                const disabled = unavailableClassrooms.includes(room);
+                const selected = selectedClassrooms.includes(room);
+                return (
+                  <div
+                    key={room}
+                    onClick={() => handleClassroomClick(room, disabled)}
+                    className={`
+                      relative cursor-pointer rounded-xl border p-4 text-center font-medium transition-all
+                      ${disabled ? "bg-gray-100 text-gray-400 cursor-not-allowed opacity-70 border-gray-300" : ""}
+                      ${selected ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg scale-105" : "bg-white hover:bg-indigo-50 border-indigo-200"}
+                    `}
+                  >
+                    {room}
+                    {selected && !disabled && <Check className="absolute top-1 right-1 h-5 w-5 text-white" />}
+                  </div>
+                );
+              })}
             </div>
           </CardContent>
         </Card>
 
+        {/* Max Classes per Day */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Max Classes per Day</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <input
+              id="maxClasses"
+              type="number"
+              min="1"
+              className="w-full border rounded-md p-2"
+              placeholder="Enter number"
+            />
+          </CardContent>
+        </Card>
+
+        {/* Subjects */}
         <Card>
           <CardHeader>
             <CardTitle className="flex justify-between items-center">
@@ -86,20 +178,21 @@ export const InputData: React.FC = () => {
           <CardContent className="space-y-2">
             {subjects.map((subject, index) => (
               <div key={index} className="flex gap-2">
-                <Input
+                <select
+                  className="w-full border rounded-md p-2"
                   value={subject}
                   onChange={(e) => {
                     const newSubjects = [...subjects];
                     newSubjects[index] = e.target.value;
                     setSubjects(newSubjects);
                   }}
-                  placeholder="Enter subject name"
-                />
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  onClick={() => handleRemoveSubject(index)}
                 >
+                  <option value="">Select subject</option>
+                  {availableSubjects.map((s, i) => (
+                    <option key={i} value={s}>{s}</option>
+                  ))}
+                </select>
+                <Button size="icon" variant="ghost" onClick={() => handleRemoveSubject(index)}>
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
@@ -107,6 +200,7 @@ export const InputData: React.FC = () => {
           </CardContent>
         </Card>
 
+        {/* Faculty */}
         <Card>
           <CardHeader>
             <CardTitle className="flex justify-between items-center">
@@ -119,40 +213,27 @@ export const InputData: React.FC = () => {
           <CardContent className="space-y-2">
             {faculty.map((member, index) => (
               <div key={index} className="flex gap-2">
-                <Input
+                <select
+                  className="w-full border rounded-md p-2"
                   value={member}
                   onChange={(e) => {
                     const newFaculty = [...faculty];
                     newFaculty[index] = e.target.value;
                     setFaculty(newFaculty);
                   }}
-                  placeholder="Enter faculty name"
-                />
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  onClick={() => handleRemoveFaculty(index)}
                 >
+                  <option value="">Select faculty</option>
+                  {availableFaculty.map((f, i) => (
+                    <option key={i} value={f.name}>
+                      {f.name} ({f.teaches})
+                    </option>
+                  ))}
+                </select>
+                <Button size="icon" variant="ghost" onClick={() => handleRemoveFaculty(index)}>
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
             ))}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Constraints</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <Label htmlFor="maxPerWeek">Max Classes per Week</Label>
-              <Input id="maxPerWeek" type="number" placeholder="Enter number" />
-            </div>
-            <div>
-              <Label htmlFor="fixedSlots">Fixed Time Slots</Label>
-              <Input id="fixedSlots" placeholder="e.g., Monday 9-10 AM" />
-            </div>
           </CardContent>
         </Card>
       </div>

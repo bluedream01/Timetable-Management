@@ -169,7 +169,7 @@ export const ViewTimetables: React.FC = () => {
             <CardTitle>Timetable Preview</CardTitle>
           </CardHeader>
           <CardContent>
-            <CalendarView timetable={selectedTimetable} />
+            <CalendarView schedule={selectedTimetable} />
           </CardContent>
         </Card>
       )}

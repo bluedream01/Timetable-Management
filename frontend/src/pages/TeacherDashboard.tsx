@@ -14,8 +14,7 @@ const mockSchedule: { [key in DayOfWeek]: TimeSlot[] } = {
   tuesday: [],
   wednesday: [],
   thursday: [],
-  friday: [],
-  saturday: [],
+  friday: []
 };
 
 export const TeacherDashboard: React.FC = () => {

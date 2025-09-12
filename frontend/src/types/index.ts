@@ -2,7 +2,7 @@ export type UserRole = 'admin' | 'student' | 'teacher';
 export type Language = 'en' | 'hi' | 'nagpuri' | 'santali';
 export type Department = 'CS' | 'ECE' | 'EEE';
 export type TimetableStatus = 'draft' | 'under-review' | 'finalized';
-export type DayOfWeek = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday';
+export type DayOfWeek = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' ;
 
 export interface User {
   id: string;
@@ -15,8 +15,8 @@ export interface User {
 
 export interface TimeSlot {
   id: string;
-  startTime: string;
-  endTime: string;
+  startTime?: string;
+  endTime?: string;
   subject: string;
   faculty: string;
   room: string;
@@ -32,7 +32,11 @@ export interface Timetable {
   updatedAt: Date;
   createdBy: string;
   schedule: {
-    [key in DayOfWeek]: TimeSlot[];
+    monday: TimeSlot[];
+    tuesday: TimeSlot[];
+    wednesday: TimeSlot[];
+    thursday: TimeSlot[];
+    friday: TimeSlot[]; // ✅ optional now
   };
 }
 

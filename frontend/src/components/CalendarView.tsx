@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { DayOfWeek, TimeSlot } from '@/types';
+import React from 'react';
 import { Clock, MapPin, User, Book } from 'lucide-react';
+import { DayOfWeek, TimeSlot } from '@/types';
 import { cn } from '@/lib/utils';
 
 interface CalendarViewProps {
   schedule: {
-    [key in DayOfWeek]: TimeSlot[];
+    [key in DayOfWeek]: (TimeSlot | null)[];
   };
-  currentClassHighlight?: boolean;
   editable?: boolean;
   onEdit?: (day: DayOfWeek, slotIndex: number) => void;
 }
@@ -23,61 +21,21 @@ const timeSlots = [
   '04:00 - 05:00',
 ];
 
-const days: DayOfWeek[] = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+const days: DayOfWeek[] = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
 
-export const CalendarView: React.FC<CalendarViewProps> = ({
-  schedule,
-  currentClassHighlight = false,
-  editable = false,
-  onEdit,
-}) => {
-  const { t } = useLanguage();
-  const [currentSlot, setCurrentSlot] = useState<{ day: DayOfWeek; time: string } | null>(null);
-
-  useEffect(() => {
-    if (!currentClassHighlight) return;
-
-    const updateCurrentSlot = () => {
-      const now = new Date();
-      const currentDay = days[now.getDay() - 1];
-      const currentHour = now.getHours();
-      const currentMinute = now.getMinutes();
-      const currentTime = `${currentHour}:${currentMinute < 10 ? '0' : ''}${currentMinute}`;
-
-      for (const slot of timeSlots) {
-        const [start, end] = slot.split(' - ');
-        if (currentTime >= start && currentTime < end) {
-          setCurrentSlot({ day: currentDay, time: slot });
-          break;
-        }
-      }
-    };
-
-    updateCurrentSlot();
-    const interval = setInterval(updateCurrentSlot, 60000); // Update every minute
-
-    return () => clearInterval(interval);
-  }, [currentClassHighlight]);
-
-  const isCurrentClass = (day: DayOfWeek, time: string) => {
-    return currentSlot?.day === day && currentSlot?.time === time;
-  };
-
+export const CalendarView: React.FC<CalendarViewProps> = ({ schedule, editable = false, onEdit }) => {
   return (
-    <div className="w-full overflow-x-auto shadow-card rounded-lg bg-card">
+    <div className="w-full overflow-x-auto shadow rounded-lg bg-card">
       <table className="w-full border-collapse">
         <thead>
           <tr className="bg-gradient-header">
-            <th className="border border-border p-3 text-primary-foreground font-semibold text-left">
+            <th className="border p-3 text-left">
               <Clock className="inline-block w-4 h-4 mr-2" />
-              {t('time')}
+              Time
             </th>
             {days.map((day) => (
-              <th
-                key={day}
-                className="border border-border p-3 text-primary-foreground font-semibold text-center min-w-[150px]"
-              >
-                {t(day)}
+              <th key={day} className="border p-3 text-center min-w-[150px] capitalize">
+                {day}
               </th>
             ))}
           </tr>
@@ -85,59 +43,51 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
         <tbody>
           {timeSlots.map((time, timeIndex) => (
             <tr key={time} className={timeIndex === 3 ? 'bg-muted/30' : ''}>
-              <td className="border border-border p-3 font-medium text-muted-foreground bg-primary-light/30">
+              {/* Left column (time label) */}
+              <td className="border p-3 font-medium text-muted-foreground bg-primary-light/30">
                 {time}
               </td>
+
+              {/* Day columns */}
               {days.map((day) => {
-                const slot = schedule[day]?.[timeIndex];
-                const isCurrent = isCurrentClass(day, time);
-                const isLunchBreak = timeIndex === 3;
+                const slot = schedule[day]?.[timeIndex] ?? null;
+                const isLunch = timeIndex === 3;
 
                 return (
                   <td
-                    key={`${day}-${time}`}
+                    key={`${day}-${timeIndex}`}
                     className={cn(
-                      'border border-border p-2 relative transition-all',
-                      isCurrent && 'bg-calendar-current/20 ring-2 ring-calendar-current animate-pulse',
-                      isLunchBreak && 'bg-muted/50',
-                      !slot && !isLunchBreak && 'bg-background',
-                      editable && !isLunchBreak && 'hover:bg-calendar-hover cursor-pointer'
+                      'border p-2 text-sm align-top',
+                      isLunch && 'bg-muted/50',
+                      editable && !isLunch && 'hover:bg-calendar-hover cursor-pointer'
                     )}
-                    onClick={() => editable && !isLunchBreak && onEdit?.(day, timeIndex)}
+                    onClick={() => editable && !isLunch && onEdit?.(day, timeIndex)}
                   >
-                    {isLunchBreak ? (
-                      <div className="text-center text-muted-foreground font-medium py-2">
-                        Lunch Break
-                      </div>
+                    {isLunch ? (
+                      <div className="text-center text-muted-foreground">Lunch Break</div>
                     ) : slot ? (
                       <div className="space-y-1">
-                        <div className="flex items-center gap-1 text-sm font-semibold text-foreground">
+                        <div className="flex items-center gap-1 font-semibold">
                           <Book className="w-3 h-3 text-primary" />
-                          <span className="truncate">{slot.subject}</span>
+                          <span>{slot.subject}</span>
                         </div>
                         <div className="flex items-center gap-1 text-xs text-muted-foreground">
                           <User className="w-3 h-3" />
-                          <span className="truncate">{slot.faculty}</span>
+                          <span>{slot.faculty}</span>
                         </div>
                         <div className="flex items-center gap-1 text-xs text-muted-foreground">
                           <MapPin className="w-3 h-3" />
                           <span>{slot.room}</span>
                         </div>
                         {slot.batch && (
-                          <div className="text-xs bg-secondary-light text-secondary px-1 py-0.5 rounded inline-block">
+                          <div className="text-xs bg-secondary-light text-secondary px-1 py-0.5 rounded">
                             {slot.batch}
                           </div>
                         )}
                       </div>
                     ) : (
-                      <div className="text-center text-muted-foreground text-sm py-4">
+                      <div className="text-center text-muted-foreground">
                         {editable ? '+ Add Class' : '-'}
-                      </div>
-                    )}
-                    {isCurrent && (
-                      <div className="absolute top-1 right-1">
-                        <span className="inline-flex h-2 w-2 rounded-full bg-calendar-current animate-ping"></span>
-                        <span className="absolute inline-flex h-2 w-2 rounded-full bg-calendar-current"></span>
                       </div>
                     )}
                   </td>
