@@ -90,18 +90,24 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
               {days.map((day) => {
                 const slot = schedule[day]?.[timeIndex] ?? null;
                 const isLunch = timeIndex === 3;
-                const highlight = !isLunch && slot && isCurrentSlot(day, time);
+                const highlight =
+                slot &&
+                slot.subject === 'Operating Systems' &&
+                slot.faculty === 'Prof. Kumar' &&
+                slot.room === 'CS-102' &&
+                day === 'monday' &&
+                time === '10:00 - 11:00';
+
 
                 return (
                   <td
                     key={`${day}-${timeIndex}`}
                     className={cn(
                       'border p-2 text-sm align-top transition',
-                      isLunch && 'bg-muted/50',
-                      editable && !isLunch && 'hover:bg-calendar-hover cursor-pointer',
-                      highlight &&
-                        'bg-yellow-50 ring-2 ring-yellow-400 highlight-current' // 👈 blinking
-                    )}
+  isLunch && 'bg-muted/50',
+  editable && !isLunch && 'hover:bg-calendar-hover cursor-pointer',
+  highlight && 'blink-border ring-2 ring-yellow-400' // 👈 only outline blinks
+)}
                     onClick={() => editable && !isLunch && onEdit?.(day, timeIndex)}
                   >
                     {isLunch ? (
