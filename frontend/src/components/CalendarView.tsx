@@ -92,11 +92,11 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                 const isLunch = timeIndex === 3;
                 const highlight =
                 slot &&
-                slot.subject === 'Operating Systems' &&
-                slot.faculty === 'Prof. Kumar' &&
-                slot.room === 'CS-102' &&
+                slot.subject === 'Data Structures' &&
+                slot.faculty === 'Dr. Sharma' &&
+                slot.room === 'CS-101' &&
                 day === 'monday' &&
-                time === '10:00 - 11:00';
+                time === '09:00 - 10:00';
 
 
                 return (
