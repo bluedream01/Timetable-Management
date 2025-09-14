@@ -7,19 +7,37 @@ import { DayOfWeek, TimeSlot } from '@/types';
 
 const mockSchedule: { [key in DayOfWeek]: TimeSlot[] } = {
   monday: [
-    { id: '1', startTime: '09:00', endTime: '10:00', subject: 'Data Structures', faculty: 'Dr. Sharma', room: 'CS-101' },
-    { id: '2', startTime: '10:00', endTime: '11:00', subject: 'Operating Systems', faculty: 'Prof. Kumar', room: 'CS-102' },
-    { id: '3', startTime: '11:00', endTime: '12:00', subject: 'Database Management', faculty: 'Dr. Patel', room: 'CS-Lab' },
-    { id: '4', startTime: '12:00', endTime: '01:00', subject: '', faculty: '', room: '' },
-    { id: '5', startTime: '02:00', endTime: '03:00', subject: 'Computer Networks', faculty: 'Prof. Singh', room: 'CS-101' },
+    { id: "1", startTime: "09:00", endTime: "10:00", subject: "DSA", faculty: "Dr. Sharma", room: "Room 101" },
+    { id: "2", startTime: "10:00", endTime: "11:00", subject: "Analog", faculty: "Prof. Verma", room: "Room 102" },
+    { id: "3", startTime: "11:00", endTime: "12:00", subject: "Maths-III", faculty: "Ms. Gupta", room: "Room 103" },
+    { id: "4", startTime: "12:00", endTime: "01:00", subject: "DSA Lab", faculty: "Prof. Nair", room: "Lab 201" },
   ],
   tuesday: [
-    { id: '6', startTime: '09:00', endTime: '10:00', subject: 'Software Engineering', faculty: 'Dr. Gupta', room: 'CS-103' },
-    { id: '7', startTime: '10:00', endTime: '11:00', subject: 'Data Structures', faculty: 'Dr. Sharma', room: 'CS-Lab' },
+    { id: "5", startTime: "09:00", endTime: "10:00", subject: "Signal & Systems", faculty: "Dr. Banerjee", room: "Room 104" },
+    { id: "6", startTime: "10:00", endTime: "11:00", subject: "Operating Systems", faculty: "Dr. Singh", room: "Room 105" },
+    { id: "7", startTime: "11:00", endTime: "12:00", subject: "Maths-III", faculty: "Dr. Rao", room: "Room 106" },
+    { id: "8", startTime: "12:00", endTime: "01:00", subject: "DBMS Lab", faculty: "Ms. Roy", room: "Lab 202" },
   ],
-  wednesday: [],
-  thursday: [],
-  friday: [],
+  wednesday: [
+    { id: "9", startTime: "09:00", endTime: "10:00", subject: "Analog", faculty: "Dr. Raghavan", room: "Room 107" },
+    { id: "10", startTime: "10:00", endTime: "11:00", subject: "Computer Networks", faculty: "Mr. Mehta", room: "Room 108" },
+    { id: "11", startTime: "11:00", endTime: "12:00", subject: "Maths-III", faculty: "Prof. Kulkarni", room: "Room 109" },
+    { id: "12", startTime: "12:00", endTime: "01:00", subject: "Digital Electronics", faculty: "Prof. Iyer", room: "Room 110" },
+    { id: "13", startTime: "02:00", endTime: "03:00", subject: "Signal & Systems", faculty: "Mr. Khan", room: "Room 111" },
+  ],
+  thursday: [
+    { id: "14", startTime: "09:00", endTime: "10:00", subject: "Operating Systems", faculty: "Ms. Joshi", room: "Room 112" },
+    { id: "15", startTime: "10:00", endTime: "11:00", subject: "DBMS", faculty: "Dr. Krishnan", room: "Room 113" },
+    { id: "16", startTime: "11:00", endTime: "12:00", subject: "DSA", faculty: "Ms. Kapoor", room: "Room 114" },
+    { id: "17", startTime: "12:00", endTime: "01:00", subject: "Networks Lab", faculty: "Prof. Mukherjee", room: "Lab 203" },
+  ],
+  friday: [
+    { id: "18", startTime: "09:00", endTime: "10:00", subject: "Digital Electronics", faculty: "Ms. Fernandes", room: "Room 115" },
+    { id: "19", startTime: "10:00", endTime: "11:00", subject: "Signal & Systems", faculty: "Ms. Thomas", room: "Room 116" },
+    { id: "20", startTime: "11:00", endTime: "12:00", subject: "Analog", faculty: "Mr. Sinha", room: "Room 117" },
+    { id: "21", startTime: "12:00", endTime: "01:00", subject: "Operating Systems", faculty: "Prof. Menon", room: "Room 118" },
+    { id: "22", startTime: "02:00", endTime: "03:00", subject: "DBMS", faculty: "Mr. Joseph", room: "Room 119" },
+  ],
 };
 
 export const StudentDashboard: React.FC = () => {

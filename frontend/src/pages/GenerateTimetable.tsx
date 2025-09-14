@@ -9,25 +9,46 @@ import { useToast } from "@/hooks/use-toast";
 const availableSubjects = ["DSA", "Analog", "Maths-III", "Signal & Systems"];
 
 const availableFaculty = [
-  // DSA
-  { name: "Dr. Sharma", teaches: "DSA" },
-  { name: "Prof. Nair", teaches: "DSA" },
-  { name: "Ms. Kapoor", teaches: "DSA" },
+  // 1. Data Structures & Algorithms (DSA)
+{ name: "Dr. Sharma", teaches: "DSA" },
+{ name: "Prof. Nair", teaches: "DSA" },
+{ name: "Ms. Kapoor", teaches: "DSA" },
 
-  // Analog
-  { name: "Prof. Verma", teaches: "Analog" },
-  { name: "Dr. Raghavan", teaches: "Analog" },
-  { name: "Mr. Sinha", teaches: "Analog" },
+// 2. Analog Electronics
+{ name: "Prof. Verma", teaches: "Analog" },
+{ name: "Dr. Raghavan", teaches: "Analog" },
+{ name: "Mr. Sinha", teaches: "Analog" },
 
-  // Maths-III
-  { name: "Ms. Gupta", teaches: "Maths-III" },
-  { name: "Dr. Rao", teaches: "Maths-III" },
-  { name: "Prof. Kulkarni", teaches: "Maths-III" },
+// 3. Mathematics-III
+{ name: "Ms. Gupta", teaches: "Maths-III" },
+{ name: "Dr. Rao", teaches: "Maths-III" },
+{ name: "Prof. Kulkarni", teaches: "Maths-III" },
 
-  // Signal & Systems
-  { name: "Mr. Khan", teaches: "Signal & Systems" },
-  { name: "Dr. Banerjee", teaches: "Signal & Systems" },
-  { name: "Ms. Thomas", teaches: "Signal & Systems" },
+// 4. Signals & Systems
+{ name: "Mr. Khan", teaches: "Signal & Systems" },
+{ name: "Dr. Banerjee", teaches: "Signal & Systems" },
+{ name: "Ms. Thomas", teaches: "Signal & Systems" },
+
+// 5. Digital Electronics
+{ name: "Prof. Iyer", teaches: "Digital Electronics" },
+{ name: "Ms. Fernandes", teaches: "Digital Electronics" },
+{ name: "Dr. Choudhury", teaches: "Digital Electronics" },
+
+// 6. Computer Networks
+{ name: "Mr. Mehta", teaches: "Computer Networks" },
+{ name: "Prof. Mukherjee", teaches: "Computer Networks" },
+{ name: "Dr. Reddy", teaches: "Computer Networks" },
+
+// 7. Operating Systems
+{ name: "Ms. Joshi", teaches: "Operating Systems" },
+{ name: "Dr. Singh", teaches: "Operating Systems" },
+{ name: "Prof. Menon", teaches: "Operating Systems" },
+
+// 8. Database Management Systems (DBMS)
+{ name: "Dr. Krishnan", teaches: "DBMS" },
+{ name: "Mr. Joseph", teaches: "DBMS" },
+{ name: "Ms. Roy", teaches: "DBMS" },
+
 ];
 
 export const GenerateTimetable: React.FC = () => {
@@ -46,18 +67,37 @@ export const GenerateTimetable: React.FC = () => {
   const generateSingleTimetable = () => {
     return {
       monday: [
-        { time: "9:00-10:00", subject: "DSA", room: "Room 101", faculty: randomFaculty("DSA") },
-        { time: "10:00-11:00", subject: "Analog", room: "Room 102", faculty: randomFaculty("Analog") },
-        { time: "11:00-12:00", subject: "Maths-III", room: "Room 103", faculty: randomFaculty("Maths-III") },
-      ],
-      tuesday: [
-        { time: "9:00-10:00", subject: "Signal & Systems", room: "Room 104", faculty: randomFaculty("Signal & Systems") },
-        { time: "10:00-11:00", subject: "DSA", room: "Room 105", faculty: randomFaculty("DSA") },
-      ],
-      wednesday: [
-        { time: "9:00-10:00", subject: "Analog", room: "Room 106", faculty: randomFaculty("Analog") },
-        { time: "10:00-11:00", subject: "Maths-III", room: "Room 107", faculty: randomFaculty("Maths-III") },
-      ],
+      { time: "09:00 - 10:00", subject: "DSA", room: "Room 101", faculty: randomFaculty("DSA") },
+      { time: "10:00 - 11:00", subject: "Analog", room: "Room 102", faculty: randomFaculty("Analog") },
+      { time: "11:00 - 12:00", subject: "Maths-III", room: "Room 103", faculty: randomFaculty("Maths-III") },
+      { time: "02:00 - 04:00", subject: "DSA Lab", room: "Lab 201", faculty: randomFaculty("DSA") },
+    ],
+    tuesday: [
+      { time: "09:00 - 10:00", subject: "Signals & Systems", room: "Room 104", faculty: randomFaculty("Signal & Systems") },
+      { time: "10:00 - 11:00", subject: "Operating Systems", room: "Room 105", faculty: randomFaculty("Operating Systems") },
+      { time: "11:00 - 12:00", subject: "Maths-III", room: "Room 106", faculty: randomFaculty("Maths-III") },
+      { time: "02:00 - 04:00", subject: "DBMS Lab", room: "Lab 202", faculty: randomFaculty("DBMS") },
+    ],
+    wednesday: [
+      { time: "09:00 - 10:00", subject: "Analog", room: "Room 107", faculty: randomFaculty("Analog") },
+      { time: "10:00 - 11:00", subject: "Computer Networks", room: "Room 108", faculty: randomFaculty("Computer Networks") },
+      { time: "11:00 - 12:00", subject: "Maths-III", room: "Room 109", faculty: randomFaculty("Maths-III") },
+      { time: "02:00 - 03:00", subject: "Digital Electronics", room: "Room 110", faculty: randomFaculty("Digital Electronics") },
+      { time: "03:00 - 04:00", subject: "Signals & Systems", room: "Room 111", faculty: randomFaculty("Signal & Systems") },
+    ],
+    thursday: [
+      { time: "09:00 - 10:00", subject: "Operating Systems", room: "Room 112", faculty: randomFaculty("Operating Systems") },
+      { time: "10:00 - 11:00", subject: "DBMS", room: "Room 113", faculty: randomFaculty("DBMS") },
+      { time: "11:00 - 12:00", subject: "DSA", room: "Room 114", faculty: randomFaculty("DSA") },
+      { time: "02:00 - 04:00", subject: "Networks Lab", room: "Lab 203", faculty: randomFaculty("Computer Networks") },
+    ],
+    friday: [
+      { time: "09:00 - 10:00", subject: "Digital Electronics", room: "Room 115", faculty: randomFaculty("Digital Electronics") },
+      { time: "10:00 - 11:00", subject: "Signals & Systems", room: "Room 116", faculty: randomFaculty("Signal & Systems") },
+      { time: "11:00 - 12:00", subject: "Analog", room: "Room 117", faculty: randomFaculty("Analog") },
+      { time: "02:00 - 03:00", subject: "Operating Systems", room: "Room 118", faculty: randomFaculty("Operating Systems") },
+      { time: "03:00 - 04:00", subject: "DBMS", room: "Room 119", faculty: randomFaculty("DBMS") },
+    ],
     };
   };
 
@@ -83,7 +123,6 @@ export const GenerateTimetable: React.FC = () => {
   };
 
   const handleEdit = (timetable: any) => {
-    // open editor modal OR just mark as editable for now
     toast({
       title: "Edit Mode",
       description: "You can now edit this timetable.",
@@ -162,7 +201,8 @@ export const GenerateTimetable: React.FC = () => {
           </div>
         </>
       ) : (
-        <div className="grid md:grid-cols-3 gap-6">
+        // ✅ Force timetable options into columns always
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {timetables.map((tt, idx) => (
             <Card key={idx} className="shadow-md hover:shadow-lg transition">
               <CardHeader>

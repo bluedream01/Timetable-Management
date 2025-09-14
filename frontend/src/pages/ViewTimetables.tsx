@@ -24,13 +24,44 @@ export const ViewTimetables: React.FC = () => {
   const [slotData, setSlotData] = useState<TimeSlot>({ subject: '', faculty: '', room: '', id: '' });
 
   const timetables = [
-    { id: 1, name: 'CS Department - Semester 1', createdDate: '2025-01-15', status: 'finalized', department: 'CS' },
-    { id: 2, name: 'ECE Department - Semester 1', createdDate: '2025-01-14', status: 'finalized', department: 'ECE' },
-    { id: 3, name: 'EEE Department - Semester 1', createdDate: '2025-01-13', status: 'finalized', department: 'EEE' },
+    { id: 1, name: 'CS Department - Semester 1', createdDate: '2025-09-15', status: 'finalized', department: 'CS' },
+    { id: 2, name: 'ECE Department - Semester 1', createdDate: '2025-09-15', status: 'finalized', department: 'ECE' },
+    { id: 3, name: 'EEE Department - Semester 1', createdDate: '2025-09-15', status: 'finalized', department: 'EEE' },
   ];
 
   const mockSchedules: Record<number, Record<DayOfWeek, TimeSlot[]>> = {
-    1: { monday: [{ subject: 'Mathematics', faculty: 'Dr. Sharma', room: 'Room 101', id: uuidv4() }], tuesday: [{ subject: 'DSA', faculty: 'Dr. Rao', room: 'Room 101', id: uuidv4() }], wednesday: [], thursday: [], friday: [] },
+    1: { monday: [
+    { subject: "DSA", faculty: "Dr. Sharma", room: "Room 101", id: uuidv4() },
+    { subject: "Analog", faculty: "Prof. Verma", room: "Room 102", id: uuidv4() },
+    { subject: "Maths-III", faculty: "Ms. Gupta", room: "Room 103", id: uuidv4() },
+    { subject: "DSA Lab", faculty: "Prof. Nair", room: "Lab 201", id: uuidv4() },
+  ],
+  tuesday: [
+    { subject: "Signal & Systems", faculty: "Dr. Banerjee", room: "Room 104", id: uuidv4() },
+    { subject: "Operating Systems", faculty: "Dr. Singh", room: "Room 105", id: uuidv4() },
+    { subject: "Maths-III", faculty: "Dr. Rao", room: "Room 106", id: uuidv4() },
+    { subject: "DBMS Lab", faculty: "Ms. Roy", room: "Lab 202", id: uuidv4() },
+  ],
+  wednesday: [
+    { subject: "Analog", faculty: "Dr. Raghavan", room: "Room 107", id: uuidv4() },
+    { subject: "Computer Networks", faculty: "Mr. Mehta", room: "Room 108", id: uuidv4() },
+    { subject: "Maths-III", faculty: "Prof. Kulkarni", room: "Room 109", id: uuidv4() },
+    { subject: "Digital Electronics", faculty: "Prof. Iyer", room: "Room 110", id: uuidv4() },
+    { subject: "Signal & Systems", faculty: "Mr. Khan", room: "Room 111", id: uuidv4() },
+  ],
+  thursday: [
+    { subject: "Operating Systems", faculty: "Ms. Joshi", room: "Room 112", id: uuidv4() },
+    { subject: "DBMS", faculty: "Dr. Krishnan", room: "Room 113", id: uuidv4() },
+    { subject: "DSA", faculty: "Ms. Kapoor", room: "Room 114", id: uuidv4() },
+    { subject: "Networks Lab", faculty: "Prof. Mukherjee", room: "Lab 203", id: uuidv4() },
+  ],
+  friday: [
+    { subject: "Digital Electronics", faculty: "Ms. Fernandes", room: "Room 115", id: uuidv4() },
+    { subject: "Signal & Systems", faculty: "Ms. Thomas", room: "Room 116", id: uuidv4() },
+    { subject: "Analog", faculty: "Mr. Sinha", room: "Room 117", id: uuidv4() },
+    { subject: "Operating Systems", faculty: "Prof. Menon", room: "Room 118", id: uuidv4() },
+    { subject: "DBMS", faculty: "Mr. Joseph", room: "Room 119", id: uuidv4() },
+  ], },
     2: { monday: [{ subject: 'Electronics', faculty: 'Dr. Raghavan', room: 'Room 201', id: uuidv4() }], tuesday: [{ subject: 'Microcontrollers', faculty: 'Dr. Banerjee', room: 'Room 201', id: uuidv4() }], wednesday: [], thursday: [], friday: [] },
     3: { monday: [{ subject: 'Circuits', faculty: 'Prof. Kulkarni', room: 'Room 301', id: uuidv4() }], tuesday: [{ subject: 'Power Systems', faculty: 'Ms. Gupta', room: 'Room 301', id: uuidv4() }], wednesday: [], thursday: [], friday: [] },
   };

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Clock, MapPin, User, Book, Send, Phone, FolderOpen } from 'lucide-react';
 import { DayOfWeek, TimeSlot } from '@/types';
 import { cn } from '@/lib/utils';
@@ -53,6 +53,10 @@ const mockSchedule: { [key in DayOfWeek]: TimeSlot[] } = {
 const CalendarView: React.FC<CalendarViewProps> = ({ schedule, editable = false }) => {
   const currentSlotRef = useRef<HTMLTableCellElement | null>(null);
 
+  // Fixed highlight: Monday, 09:00–10:00
+  const highlightedDay: DayOfWeek = 'monday';
+  const highlightedIndex = 0;
+
   useEffect(() => {
     currentSlotRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, []);
@@ -82,18 +86,20 @@ const CalendarView: React.FC<CalendarViewProps> = ({ schedule, editable = false 
                 const slot = schedule[day]?.[timeIndex] ?? null;
                 const isLunch = timeIndex === 3;
 
-                // Hardcoded highlight: Monday, first class
-                const highlight = !isLunch && slot && day === 'monday' && timeIndex === 0;
+                // highlight only one slot
+                const highlight = !isLunch && slot && day === highlightedDay && timeIndex === highlightedIndex;
 
                 return (
                   <td
                     key={`${day}-${timeIndex}`}
                     ref={highlight ? currentSlotRef : null}
                     className={cn(
-                      'border p-2 text-sm align-top transition',
+                      'border p-2 text-sm align-top transition duration-300',
                       isLunch && 'bg-muted/50',
                       editable && !isLunch && 'hover:bg-calendar-hover cursor-pointer',
-                      highlight && 'bg-yellow-50 ring-2 ring-yellow-400'
+                      highlight
+                        ? 'bg-yellow-50 ring-2 ring-yellow-400 opacity-100'
+                        : !isLunch && 'opacity-30' // fade others
                     )}
                     onClick={() => editable && !isLunch && console.log(`Edit ${day} slot ${timeIndex}`)}
                   >
@@ -133,6 +139,15 @@ const CalendarView: React.FC<CalendarViewProps> = ({ schedule, editable = false 
 // Teacher Dashboard
 export const TeacherDashboard: React.FC = () => {
   const { t } = useLanguage();
+  const folderInputRef = useRef<HTMLInputElement | null>(null);
+  const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
+
+  const handleFolderSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files) return;
+    const fileArray = Array.from(files).map(f => f.webkitRelativePath || f.name);
+    setUploadedFiles(fileArray);
+  };
 
   return (
     <div className="space-y-6">
@@ -154,13 +169,38 @@ export const TeacherDashboard: React.FC = () => {
 
         <div className="border rounded-lg shadow p-3 space-y-3">
           <h2 className="font-semibold">{t('chapterManagement')}</h2>
-          <button className="w-full border flex items-center justify-center gap-2 py-1 rounded">
-            <FolderOpen className="w-4 h-4" /> Create New Chapter
+
+          {/* hidden input */}
+          <input
+            type="file"
+            ref={folderInputRef}
+            style={{ display: 'none' }}
+            webkitdirectory="true"
+            directory=""
+            onChange={handleFolderSelect}
+          />
+
+          <button
+            className="w-full border flex items-center justify-center gap-2 py-1 rounded hover:bg-calendar-hover"
+            onClick={() => folderInputRef.current?.click()}
+          >
+            <FolderOpen className="w-4 h-4" /> Upload Chapter Folder
           </button>
+
           <div className="text-sm text-muted-foreground">
-            <p>• Chapter 1: Introduction</p>
-            <p>• Chapter 2: Basic Concepts</p>
-            <p>• Chapter 3: Advanced Topics</p>
+            {uploadedFiles.length === 0 ? (
+              <>
+                <p>• Chapter 1: Introduction</p>
+                <p>• Chapter 2: Basic Concepts</p>
+                <p>• Chapter 3: Advanced Topics</p>
+              </>
+            ) : (
+              <ul className="list-disc pl-5 space-y-1">
+                {uploadedFiles.map((f, i) => (
+                  <li key={i}>{f}</li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
       </div>
