@@ -21,6 +21,7 @@ export interface TimeSlot {
   faculty: string;
   room: string;
   batch?: string;
+  time?: string;
 }
 
 export interface Timetable {
