@@ -158,7 +158,7 @@ export const InputData: React.FC = () => {
                     className={`
                       relative cursor-pointer rounded-xl border p-4 text-center font-medium transition-all
                       ${disabled ? "bg-gray-100 text-gray-400 cursor-not-allowed opacity-70 border-gray-300" : ""}
-                      ${selected ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg scale-105" : "bg-white hover:bg-indigo-50 border-indigo-200"}
+                      ${selected ? "bg-gradient-to-r from-blue-400 to-indigo-400 text-white shadow-lg scale-105" : "bg-white hover:bg-blue-50 border-blue-200"}
                     `}
                   >
                     {room}

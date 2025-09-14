@@ -56,10 +56,10 @@ export const Login: React.FC = () => {
             <GraduationCap className="w-10 h-10 text-primary-foreground" />
           </div>
           <h1 className="text-3xl font-bold text-foreground mb-2">
-            Government College
+            Timetable Management System
           </h1>
           <p className="text-muted-foreground">
-            Timetable Management System - Jharkhand
+             Ministry of Education, Government of Jharkhand
           </p>
         </div>
 
