@@ -9,25 +9,46 @@ import { useNavigate } from "react-router-dom";
 export const InputData: React.FC = () => {
   const availableSubjects = ["DSA", "Analog", "Maths-III", "Signal & systems"];
   const availableFaculty = [
-    // DSA
+    // 1. Data Structures & Algorithms (DSA)
     { name: "Dr. Sharma", teaches: "DSA" },
     { name: "Prof. Nair", teaches: "DSA" },
     { name: "Ms. Kapoor", teaches: "DSA" },
 
-    // Analog
+    // 2. Analog Electronics
     { name: "Prof. Verma", teaches: "Analog" },
     { name: "Dr. Raghavan", teaches: "Analog" },
     { name: "Mr. Sinha", teaches: "Analog" },
 
-    // Maths-III
+    // 3. Mathematics-III
     { name: "Ms. Gupta", teaches: "Maths-III" },
     { name: "Dr. Rao", teaches: "Maths-III" },
     { name: "Prof. Kulkarni", teaches: "Maths-III" },
 
-    // Signal & Systems
+    // 4. Signals & Systems
     { name: "Mr. Khan", teaches: "Signal & Systems" },
     { name: "Dr. Banerjee", teaches: "Signal & Systems" },
     { name: "Ms. Thomas", teaches: "Signal & Systems" },
+
+    // 5. Digital Electronics
+    { name: "Prof. Iyer", teaches: "Digital Electronics" },
+    { name: "Ms. Fernandes", teaches: "Digital Electronics" },
+    { name: "Dr. Choudhury", teaches: "Digital Electronics" },
+
+    // 6. Computer Networks
+    { name: "Mr. Mehta", teaches: "Computer Networks" },
+    { name: "Prof. Mukherjee", teaches: "Computer Networks" },
+    { name: "Dr. Reddy", teaches: "Computer Networks" },
+
+    // 7. Operating Systems
+    { name: "Ms. Joshi", teaches: "Operating Systems" },
+    { name: "Dr. Singh", teaches: "Operating Systems" },
+    { name: "Prof. Menon", teaches: "Operating Systems" },
+
+    // 8. Database Management Systems (DBMS)
+    { name: "Dr. Krishnan", teaches: "DBMS" },
+    { name: "Mr. Joseph", teaches: "DBMS" },
+    { name: "Ms. Roy", teaches: "DBMS" },
+
   ];
 
   const allClassrooms = ["Room 101", "Room 102", "Room 103", "Room 104"];
