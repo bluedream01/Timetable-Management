@@ -69,17 +69,24 @@ export const AdminDashboard: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-2 sm:px-4 md:px-6">
       {/* Welcome Header */}
-      <div className="bg-gradient-primary rounded-lg p-6 text-primary-foreground shadow-lg">
-        <h1 className="text-3xl font-bold mb-2">Welcome to Admin Dashboard</h1>
-        <p className="opacity-90">Manage timetables for all departments efficiently</p>
+      <div className="bg-gradient-primary rounded-lg p-4 sm:p-6 text-primary-foreground shadow-lg text-center sm:text-left">
+        <h1 className="text-2xl sm:text-3xl font-bold mb-2">
+          Welcome to Admin Dashboard
+        </h1>
+        <p className="opacity-90 text-sm sm:text-base">
+          Manage timetables for all departments efficiently
+        </p>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat, index) => (
-          <Card key={index} className="border-border hover:shadow-card transition-shadow">
+          <Card
+            key={index}
+            className="border-border hover:shadow-card transition-shadow"
+          >
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
                 {stat.title}
@@ -89,7 +96,9 @@ export const AdminDashboard: React.FC = () => {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-foreground">{stat.value}</div>
+              <div className="text-xl sm:text-2xl font-bold text-foreground">
+                {stat.value}
+              </div>
               <div className="flex items-center text-xs text-muted-foreground mt-1">
                 <TrendingUp className="mr-1 h-3 w-3 text-success" />
                 <span>+12% from last month</span>
@@ -99,7 +108,7 @@ export const AdminDashboard: React.FC = () => {
         ))}
       </div>
 
-      {/* Quick Actions */}
+      {/* Quick Actions + Department Status */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card className="border-border">
           <CardHeader>
@@ -109,15 +118,15 @@ export const AdminDashboard: React.FC = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <Button 
+            <Button
               className="w-full bg-gradient-primary hover:opacity-90"
               onClick={() => navigate('/generate-timetable')}
             >
               <Plus className="mr-2 h-4 w-4" />
               {t('createNewTimetable')}
             </Button>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               className="w-full"
               onClick={() => navigate('/view-timetables')}
             >
@@ -134,12 +143,23 @@ export const AdminDashboard: React.FC = () => {
           <CardContent>
             <div className="space-y-3">
               {departments.map((dept) => (
-                <div key={dept.name} className="flex items-center justify-between p-3 rounded-lg bg-card-hover">
-                  <div>
-                    <p className="font-medium text-foreground">{dept.fullName}</p>
-                    <p className="text-sm text-muted-foreground">{dept.classes} classes/day</p>
+                <div
+                  key={dept.name}
+                  className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 p-3 rounded-lg bg-card-hover"
+                >
+                  <div className="text-center sm:text-left">
+                    <p className="font-medium text-foreground">
+                      {dept.fullName}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {dept.classes} classes/day
+                    </p>
                   </div>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(dept.status)}`}>
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs font-medium self-center sm:self-auto ${getStatusColor(
+                      dept.status
+                    )}`}
+                  >
                     {t(dept.status)}
                   </span>
                 </div>
@@ -156,26 +176,37 @@ export const AdminDashboard: React.FC = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-card-hover transition-colors">
-              <div className="w-2 h-2 bg-success rounded-full"></div>
-              <p className="text-sm">
-                <span className="font-medium">CS Department</span> timetable was approved
+            <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3 p-3 rounded-lg hover:bg-card-hover transition-colors">
+              <div className="w-2 h-2 bg-success rounded-full mb-2 sm:mb-0"></div>
+              <p className="text-sm flex-1">
+                <span className="font-medium">CS Department</span> timetable
+                was approved
               </p>
-              <span className="text-xs text-muted-foreground ml-auto">2 hours ago</span>
+              <span className="text-xs text-muted-foreground sm:ml-auto">
+                2 hours ago
+              </span>
             </div>
-            <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-card-hover transition-colors">
-              <div className="w-2 h-2 bg-warning rounded-full"></div>
-              <p className="text-sm">
-                <span className="font-medium">Dr. Sharma</span> submitted ECE timetable for review
+
+            <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3 p-3 rounded-lg hover:bg-card-hover transition-colors">
+              <div className="w-2 h-2 bg-warning rounded-full mb-2 sm:mb-0"></div>
+              <p className="text-sm flex-1">
+                <span className="font-medium">Dr. Sharma</span> submitted ECE
+                timetable for review
               </p>
-              <span className="text-xs text-muted-foreground ml-auto">5 hours ago</span>
+              <span className="text-xs text-muted-foreground sm:ml-auto">
+                5 hours ago
+              </span>
             </div>
-            <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-card-hover transition-colors">
-              <div className="w-2 h-2 bg-primary rounded-full"></div>
-              <p className="text-sm">
-                <span className="font-medium">New faculty</span> added to EEE department
+
+            <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3 p-3 rounded-lg hover:bg-card-hover transition-colors">
+              <div className="w-2 h-2 bg-primary rounded-full mb-2 sm:mb-0"></div>
+              <p className="text-sm flex-1">
+                <span className="font-medium">New faculty</span> added to EEE
+                department
               </p>
-              <span className="text-xs text-muted-foreground ml-auto">1 day ago</span>
+              <span className="text-xs text-muted-foreground sm:ml-auto">
+                1 day ago
+              </span>
             </div>
           </div>
         </CardContent>

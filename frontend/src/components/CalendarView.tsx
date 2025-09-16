@@ -9,7 +9,6 @@ interface CalendarViewProps {
   };
   editable?: boolean;
   onEdit?: (day: DayOfWeek, slotIndex: number) => void;
-  highlightCurrentClass?: boolean;
 }
 
 const timeSlots = [
@@ -28,38 +27,20 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
   schedule,
   editable = false,
   onEdit,
-  highlightCurrentClass = false,
 }) => {
-  const now = new Date();
-  const currentDayIndex = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
-  const dayMap: DayOfWeek[] = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
-
-  const currentDay = dayMap[currentDayIndex];
-  const currentHour = now.getHours();
-  const currentMinute = now.getMinutes();
-
-  const isCurrentSlot = (day: DayOfWeek, timeRange: string) => {
-    if (!highlightCurrentClass) return false;
-    if (day !== currentDay) return false; // only highlight current day
-
-    const [start, end] = timeRange.split(' - ').map((t) => t.split(':').map(Number));
-    const startMinutes = start[0] * 60 + start[1];
-    const endMinutes = end[0] * 60 + end[1];
-    const nowMinutes = currentHour * 60 + currentMinute;
-    return nowMinutes >= startMinutes && nowMinutes < endMinutes;
-  };
-
   return (
     <div className="w-full overflow-x-auto shadow rounded-lg bg-card">
-      {/* 🔥 blink style injected directly */}
+      {/* 🔥 Blink border style */}
       <style>
         {`
-          @keyframes blink {
-            0%, 50%, 100% { opacity: 1; }
-            25%, 75% { opacity: 0.4; }
+          @keyframes blinkBorder {
+            0%, 100% { border-color: #facc15; }
+            50% { border-color: transparent; }
           }
-          .highlight-current {
-            animation: blink 1.5s infinite;
+          .blink-border {
+            border: 3.5px solid #facc15;
+            animation: blinkBorder 1s infinite;
+            border-radius: 0; /* no rounded corners */
           }
         `}
       </style>
@@ -90,24 +71,25 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
               {days.map((day) => {
                 const slot = schedule[day]?.[timeIndex] ?? null;
                 const isLunch = timeIndex === 3;
-                const highlight =
-                slot &&
-                slot.subject === 'Data Structures' &&
-                slot.faculty === 'Dr. Sharma' &&
-                slot.room === 'CS-101' &&
-                day === 'monday' &&
-                time === '09:00 - 10:00';
 
+                // 🔴 HARD-CODED: Blink only "Monday, 09:00 - 10:00, Data Structures"
+                const highlight =
+                  slot &&
+                  slot.subject === 'Data Structures' &&
+                  slot.faculty === 'Dr. Sharma' &&
+                  slot.room === 'CS-101' &&
+                  day === 'monday' &&
+                  time === '09:00 - 10:00';
 
                 return (
                   <td
                     key={`${day}-${timeIndex}`}
                     className={cn(
-                      'border p-2 text-sm align-top transition',
-  isLunch && 'bg-muted/50',
-  editable && !isLunch && 'hover:bg-calendar-hover cursor-pointer',
-  highlight && 'blink-border ring-2 ring-yellow-400' // 👈 only outline blinks
-)}
+                      'border p-2 text-sm align-top transition rounded-none', // sharp corners
+                      isLunch && 'bg-muted/50',
+                      editable && !isLunch && 'hover:bg-calendar-hover cursor-pointer',
+                      highlight && 'blink-border' // 👈 hard-coded blinking border
+                    )}
                     onClick={() => editable && !isLunch && onEdit?.(day, timeIndex)}
                   >
                     {isLunch ? (

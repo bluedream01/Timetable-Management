@@ -83,27 +83,35 @@ export const ChapterManagement: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row justify-between items-center gap-2">
-        <h1 className="text-3xl font-bold text-foreground">{t('chapterManagement')}</h1>
-        <div className="flex gap-2 w-full md:w-auto">
+      {/* Header Section */}
+      <div className="flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-3">
+        <h1 className="text-2xl sm:text-3xl font-bold text-foreground">{t('chapterManagement')}</h1>
+
+        {/* Input + Button responsive row */}
+        <div className="flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
           <Input
             placeholder="Enter chapter name"
             value={newChapterName}
             onChange={e => setNewChapterName(e.target.value)}
+            className="flex-1"
           />
-          <Button onClick={handleCreateChapter} className="bg-gradient-primary hover:opacity-90">
+          <Button
+            onClick={handleCreateChapter}
+            className="bg-gradient-primary hover:opacity-90 w-full sm:w-auto"
+          >
             <Plus className="mr-2 h-4 w-4" />
             Create Chapter
           </Button>
         </div>
       </div>
 
-      <div className="grid gap-4">
+      {/* Chapter Cards */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {chapters.map((chapter) => (
-          <Card key={chapter.id}>
+          <Card key={chapter.id} className="flex flex-col">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Folder className="h-5 w-5 text-primary" />
+                <Folder className="h-5 w-5 text-primary shrink-0" />
                 <Input
                   className="bg-transparent border-none px-0 py-0 text-lg font-semibold w-full"
                   value={chapter.name}
@@ -111,19 +119,26 @@ export const ChapterManagement: React.FC = () => {
                 />
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <Button size="sm" onClick={() => handleUploadFile(chapter.id)}>
+            <CardContent className="flex flex-col flex-1">
+              <div className="space-y-3 flex-1">
+                <Button
+                  size="sm"
+                  onClick={() => handleUploadFile(chapter.id)}
+                  className="w-full sm:w-auto"
+                >
                   <Upload className="mr-2 h-4 w-4" />
                   Upload Files
                 </Button>
 
                 <div className="space-y-2">
                   {chapter.files.map((file) => (
-                    <div key={file} className="flex items-center justify-between p-2 rounded-lg bg-card-hover">
-                      <div className="flex items-center gap-2">
-                        <File className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm">{file}</span>
+                    <div
+                      key={file}
+                      className="flex items-center justify-between p-2 rounded-lg bg-card-hover flex-wrap"
+                    >
+                      <div className="flex items-center gap-2 min-w-0">
+                        <File className="h-4 w-4 text-muted-foreground shrink-0" />
+                        <span className="text-sm truncate">{file}</span>
                       </div>
                       <Button
                         size="sm"
