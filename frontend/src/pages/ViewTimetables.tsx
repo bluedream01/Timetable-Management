@@ -12,6 +12,7 @@ import { Modal } from "@/components/ui/Modal";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { v4 as uuidv4 } from "uuid";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export const ViewTimetables: React.FC = () => {
   const { t } = useLanguage();
@@ -217,36 +218,82 @@ export const ViewTimetables: React.FC = () => {
         })}
       </div>
 
-      {editingSlot && (
-        <Modal isOpen={!!editingSlot} onClose={() => setEditingSlot(null)}>
-          <div className="space-y-4 p-4">
-            <h2 className="text-lg font-bold">Edit Slot</h2>
-            <div className="space-y-2">
-              <div>
-                <Label>Subject</Label>
-                <Input
-                  value={slotData.subject}
-                  onChange={(e) => setSlotData({ ...slotData, subject: e.target.value })}
-                />
-              </div>
-              <div>
-                <Label>Room</Label>
-                <Input value={slotData.room} onChange={(e) => setSlotData({ ...slotData, room: e.target.value })} />
-              </div>
-              <div>
-                <Label>Faculty</Label>
-                <Input
-                  value={slotData.faculty}
-                  onChange={(e) => setSlotData({ ...slotData, faculty: e.target.value })}
-                />
-              </div>
-              <Button className="bg-gradient-primary hover:opacity-90" onClick={handleSaveSlot}>
-                Save Slot
-              </Button>
-            </div>
-          </div>
-        </Modal>
-      )}
+
+{editingSlot && (
+  <Modal isOpen={!!editingSlot} onClose={() => setEditingSlot(null)}>
+    <div className="space-y-4 p-4">
+      <h2 className="text-lg font-bold">Edit Slot</h2>
+      <div className="space-y-2">
+        
+        {/* Subject Dropdown */}
+        <div>
+          <Label>Subject</Label>
+          <Select
+            value={slotData.subject}
+            onValueChange={(val) => setSlotData({ ...slotData, subject: val })}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select a subject" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Mathematics">Mathematics</SelectItem>
+              <SelectItem value="DSA">DSA</SelectItem>
+              <SelectItem value="Electronics">Electronics</SelectItem>
+              <SelectItem value="Microcontrollers">Microcontrollers</SelectItem>
+              <SelectItem value="Circuits">Circuits</SelectItem>
+              <SelectItem value="Power Systems">Power Systems</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Room Dropdown */}
+        <div>
+          <Label>Room</Label>
+          <Select
+            value={slotData.room}
+            onValueChange={(val) => setSlotData({ ...slotData, room: val })}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select a room" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Room 101">Room 101</SelectItem>
+              <SelectItem value="Room 201">Room 201</SelectItem>
+              <SelectItem value="Room 301">Room 301</SelectItem>
+              <SelectItem value="Lab 1">Lab 1</SelectItem>
+              <SelectItem value="Lab 2">Lab 2</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Faculty Dropdown */}
+        <div>
+          <Label>Faculty</Label>
+          <Select
+            value={slotData.faculty}
+            onValueChange={(val) => setSlotData({ ...slotData, faculty: val })}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select a faculty" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Dr. Sharma">Dr. Sharma</SelectItem>
+              <SelectItem value="Dr. Rao">Dr. Rao</SelectItem>
+              <SelectItem value="Dr. Raghavan">Dr. Raghavan</SelectItem>
+              <SelectItem value="Dr. Banerjee">Dr. Banerjee</SelectItem>
+              <SelectItem value="Prof. Kulkarni">Prof. Kulkarni</SelectItem>
+              <SelectItem value="Ms. Gupta">Ms. Gupta</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <Button className="bg-gradient-primary hover:opacity-90" onClick={handleSaveSlot}>
+          Save Slot
+        </Button>
+      </div>
+    </div>
+  </Modal>
+)}
     </div>
   );
 };

@@ -198,7 +198,7 @@ export const GenerateTimetable: React.FC = () => {
         </>
       ) : (
         // Case 3: Show generated timetables (responsive grid)
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 gap-6">
           {timetables.map((tt, idx) => (
             <Card key={idx} className="shadow-md hover:shadow-lg transition">
               <CardHeader>

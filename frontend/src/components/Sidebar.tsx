@@ -109,7 +109,7 @@ export const Sidebar: React.FC = () => {
             <span className="text-primary-foreground font-bold text-lg">GC</span>
           </div>
           <div>
-            <h2 className="font-semibold text-sidebar-foreground">Jharkhand Gov</h2>
+            <h2 className="font-semibold text-sidebar-foreground">eVidyalaya</h2>
             <p className="text-xs text-muted-foreground">Timetable System</p>
           </div>
         </div>

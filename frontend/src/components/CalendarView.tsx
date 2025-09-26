@@ -16,9 +16,9 @@ const timeSlots = [
   '10:00 - 11:00',
   '11:00 - 12:00',
   '12:00 - 01:00', // lunch
-  '01:00 - 03:00',
+  '01:00 - 02:00',
+  '02:00 - 03:00',
   '03:00 - 04:00',
-  '04:00 - 05:00',
 ];
 
 const days: DayOfWeek[] = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
